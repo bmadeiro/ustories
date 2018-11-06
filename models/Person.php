@@ -22,10 +22,10 @@ use yii\db\Expression;
  * @property string $created_at
  * @property string $updated_at
  *
+ * @property AppUser[] $appUsers
  * @property City $city
  * @property Company $company
  * @property Department $department
- * @property Users[] $users
  */
 class Person extends \yii\db\ActiveRecord
 {
@@ -44,7 +44,7 @@ class Person extends \yii\db\ActiveRecord
     {
         return [
             [['department_id', 'company_id', 'city_id', 'is_active'], 'integer'],
-            [['name', 'is_active', 'created_at'], 'required'],
+            [['name', 'is_active'], 'required'],
             [['information'], 'string'],
             [['created_at', 'updated_at'], 'safe'],
             [['name', 'email'], 'string', 'max' => 120],
@@ -94,6 +94,14 @@ class Person extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getAppUsers()
+    {
+        return $this->hasMany(AppUser::className(), ['person_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getCity()
     {
         return $this->hasOne(City::className(), ['id' => 'city_id']);
@@ -113,13 +121,5 @@ class Person extends \yii\db\ActiveRecord
     public function getDepartment()
     {
         return $this->hasOne(Department::className(), ['id' => 'department_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getUsers()
-    {
-        return $this->hasMany(Users::className(), ['person_id' => 'id']);
     }
 }

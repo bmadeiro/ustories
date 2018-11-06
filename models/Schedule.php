@@ -10,15 +10,17 @@ use yii\db\Expression;
  * This is the model class for table "schedule".
  *
  * @property int $id
- * @property int $application_id
+ * @property int $app_id
  * @property string $frequency_type YEARLY, Monthly, Weekly, Daily, Hourly, Minutely
  * @property int $repeat_interval
  * @property string $start_date
  * @property string $start_time
  * @property string $end_date
  * @property string $end_time
+ * @property string $created_at
+ * @property string $updated_at
  *
- * @property Application $application
+ * @property App $app
  */
 class Schedule extends \yii\db\ActiveRecord
 {
@@ -36,11 +38,11 @@ class Schedule extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['application_id', 'frequency_type', 'repeat_interval', 'start_date', 'start_time'], 'required'],
-            [['application_id', 'repeat_interval'], 'integer'],
-            [['start_date', 'start_time', 'end_date', 'end_time'], 'safe'],
+            [['app_id', 'frequency_type', 'repeat_interval', 'start_date', 'start_time'], 'required'],
+            [['app_id', 'repeat_interval'], 'integer'],
+            [['start_date', 'start_time', 'end_date', 'end_time', 'created_at', 'updated_at'], 'safe'],
             [['frequency_type'], 'string', 'max' => 20],
-            [['application_id'], 'exist', 'skipOnError' => true, 'targetClass' => Application::className(), 'targetAttribute' => ['application_id' => 'id']],
+            [['app_id'], 'exist', 'skipOnError' => true, 'targetClass' => App::className(), 'targetAttribute' => ['app_id' => 'id']],
         ];
     }
 
@@ -66,21 +68,23 @@ class Schedule extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'application_id' => Yii::t('app', 'Application ID'),
+            'app_id' => Yii::t('app', 'App ID'),
             'frequency_type' => Yii::t('app', 'Frequency Type'),
             'repeat_interval' => Yii::t('app', 'Repeat Interval'),
             'start_date' => Yii::t('app', 'Start Date'),
             'start_time' => Yii::t('app', 'Start Time'),
             'end_date' => Yii::t('app', 'End Date'),
             'end_time' => Yii::t('app', 'End Time'),
+            'created_at' => Yii::t('app', 'Created At'),
+            'updated_at' => Yii::t('app', 'Updated At'),
         ];
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getApplication()
+    public function getApp()
     {
-        return $this->hasOne(Application::className(), ['id' => 'application_id']);
+        return $this->hasOne(App::className(), ['id' => 'app_id']);
     }
 }

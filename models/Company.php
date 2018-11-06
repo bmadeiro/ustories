@@ -35,7 +35,7 @@ class Company extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'is_active', 'created_at'], 'required'],
+            [['name', 'is_active'], 'required'],
             [['is_active'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
             [['name'], 'string', 'max' => 60],

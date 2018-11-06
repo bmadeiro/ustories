@@ -7,9 +7,10 @@ $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
-    'timeZone' => Yii::$app->user->isGuest 
-        ? 'America/Maceio'//'UTC' 
-        : User::findOne(Yii::$app->user->id)->timezone,
+    'timeZone' => //Yii::$app->user->isGuest
+        //?
+        'America/Maceio',//'UTC'
+        //: User::findOne(Yii::$app->user->id)->timezone,
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',

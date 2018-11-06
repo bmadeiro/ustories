@@ -7,26 +7,28 @@ use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
 
 /**
- * This is the model class for table "city".
+ * This is the model class for table "app_config".
  *
  * @property int $id
- * @property string $name
- * @property string $state Abbreviation
- * @property string $country
+ * @property int $app_id
+ * @property int $config_type_id
+ * @property string $value
+ * @property int $order
  * @property int $is_active
  * @property string $created_at
  * @property string $updated_at
  *
- * @property Person[] $people
+ * @property App $app
+ * @property AppConfigType $configType
  */
-class City extends \yii\db\ActiveRecord
+class AppConfig extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'city';
+        return 'app_config';
     }
 
     /**
@@ -35,12 +37,12 @@ class City extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'state', 'country', 'is_active'], 'required'],
-            [['is_active'], 'integer'],
+            [['app_id', 'config_type_id', 'is_active'], 'required'],
+            [['app_id', 'config_type_id', 'order', 'is_active'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
-            [['name', 'country'], 'string', 'max' => 120],
-            [['state'], 'string', 'max' => 20],
-            [['name', 'state', 'country'], 'unique', 'targetAttribute' => ['name', 'state', 'country']],
+            [['value'], 'string', 'max' => 120],
+            [['app_id'], 'exist', 'skipOnError' => true, 'targetClass' => App::className(), 'targetAttribute' => ['app_id' => 'id']],
+            [['config_type_id'], 'exist', 'skipOnError' => true, 'targetClass' => AppConfigType::className(), 'targetAttribute' => ['config_type_id' => 'id']],
         ];
     }
 
@@ -66,9 +68,10 @@ class City extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'name' => Yii::t('app', 'Name'),
-            'state' => Yii::t('app', 'State'),
-            'country' => Yii::t('app', 'Country'),
+            'app_id' => Yii::t('app', 'App ID'),
+            'config_type_id' => Yii::t('app', 'Config Type ID'),
+            'value' => Yii::t('app', 'Value'),
+            'order' => Yii::t('app', 'Order'),
             'is_active' => Yii::t('app', 'Is Active'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
@@ -78,8 +81,16 @@ class City extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPeople()
+    public function getApp()
     {
-        return $this->hasMany(Person::className(), ['city_id' => 'id']);
+        return $this->hasOne(App::className(), ['id' => 'app_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getConfigType()
+    {
+        return $this->hasOne(AppConfigType::className(), ['id' => 'config_type_id']);
     }
 }

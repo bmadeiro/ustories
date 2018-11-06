@@ -7,26 +7,29 @@ use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
 
 /**
- * This is the model class for table "city".
+ * This is the model class for table "app".
  *
  * @property int $id
  * @property string $name
- * @property string $state Abbreviation
- * @property string $country
+ * @property string $manager
+ * @property string $manager_phone
  * @property int $is_active
  * @property string $created_at
  * @property string $updated_at
  *
- * @property Person[] $people
+ * @property AppConfig[] $appConfigs
+ * @property AppUser[] $appUsers
+ * @property Schedule[] $schedules
+ * @property ScheduleLog[] $scheduleLogs
  */
-class City extends \yii\db\ActiveRecord
+class App extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'city';
+        return 'app';
     }
 
     /**
@@ -35,12 +38,14 @@ class City extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'state', 'country', 'is_active'], 'required'],
+            [['name', 'is_active'], 'required'],
+            ['name', 'unique'],
             [['is_active'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
-            [['name', 'country'], 'string', 'max' => 120],
-            [['state'], 'string', 'max' => 20],
-            [['name', 'state', 'country'], 'unique', 'targetAttribute' => ['name', 'state', 'country']],
+            [['name'], 'string', 'max' => 60],
+            [['manager'], 'string', 'max' => 120],
+            [['manager_phone'], 'string', 'max' => 40],
+            [['name'], 'unique'],
         ];
     }
 
@@ -67,8 +72,8 @@ class City extends \yii\db\ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'name' => Yii::t('app', 'Name'),
-            'state' => Yii::t('app', 'State'),
-            'country' => Yii::t('app', 'Country'),
+            'manager' => Yii::t('app', 'Manager'),
+            'manager_phone' => Yii::t('app', 'Manager Phone'),
             'is_active' => Yii::t('app', 'Is Active'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
@@ -78,8 +83,32 @@ class City extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPeople()
+    public function getAppConfigs()
     {
-        return $this->hasMany(Person::className(), ['city_id' => 'id']);
+        return $this->hasMany(AppConfig::className(), ['app_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAppUsers()
+    {
+        return $this->hasMany(AppUser::className(), ['app_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSchedules()
+    {
+        return $this->hasMany(Schedule::className(), ['app_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getScheduleLogs()
+    {
+        return $this->hasMany(ScheduleLog::className(), ['app_id' => 'id']);
     }
 }

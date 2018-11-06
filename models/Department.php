@@ -37,7 +37,7 @@ class Department extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['abbreviation', 'is_active', 'created_at'], 'required'],
+            [['abbreviation', 'is_active'], 'required'],
             [['order', 'is_active'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
             [['abbreviation'], 'string', 'max' => 5],

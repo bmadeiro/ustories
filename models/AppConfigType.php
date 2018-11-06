@@ -7,26 +7,26 @@ use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
 
 /**
- * This is the model class for table "city".
+ * This is the model class for table "app_config_type".
  *
  * @property int $id
+ * @property int $config_group_id
  * @property string $name
- * @property string $state Abbreviation
- * @property string $country
+ * @property string $description
  * @property int $is_active
  * @property string $created_at
  * @property string $updated_at
  *
- * @property Person[] $people
+ * @property AppConfig[] $appConfigs
  */
-class City extends \yii\db\ActiveRecord
+class AppConfigType extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'city';
+        return 'app_config_type';
     }
 
     /**
@@ -35,12 +35,11 @@ class City extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'state', 'country', 'is_active'], 'required'],
-            [['is_active'], 'integer'],
+            [['config_group_id', 'is_active'], 'integer'],
+            [['name', 'is_active'], 'required'],
+            [['description'], 'string'],
             [['created_at', 'updated_at'], 'safe'],
-            [['name', 'country'], 'string', 'max' => 120],
-            [['state'], 'string', 'max' => 20],
-            [['name', 'state', 'country'], 'unique', 'targetAttribute' => ['name', 'state', 'country']],
+            [['name'], 'string', 'max' => 60],
         ];
     }
 
@@ -66,9 +65,9 @@ class City extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
+            'config_group_id' => Yii::t('app', 'Config Group ID'),
             'name' => Yii::t('app', 'Name'),
-            'state' => Yii::t('app', 'State'),
-            'country' => Yii::t('app', 'Country'),
+            'description' => Yii::t('app', 'Description'),
             'is_active' => Yii::t('app', 'Is Active'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
@@ -78,8 +77,8 @@ class City extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPeople()
+    public function getAppConfigs()
     {
-        return $this->hasMany(Person::className(), ['city_id' => 'id']);
+        return $this->hasMany(AppConfig::className(), ['config_type_id' => 'id']);
     }
 }

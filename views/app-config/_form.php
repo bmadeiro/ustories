@@ -20,7 +20,9 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'order')->textInput() ?>
 
-    <?= $form->field($model, 'is_active')->textInput() ?>
+    <?= $form->field($model, 'is_active')->widget(SwitchInput::classname(), [
+        'type' => SwitchInput::CHECKBOX
+    ]); ?>
 
     <div class="form-group">
         <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success']) ?>

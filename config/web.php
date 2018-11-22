@@ -7,6 +7,8 @@ $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
+    'language' => 'pt-br',
+    'sourceLanguage' => 'pt-br',
     'timeZone' => //Yii::$app->user->isGuest
         //?
         'America/Maceio',//'UTC'
@@ -16,6 +18,9 @@ $config = [
         '@npm'   => '@vendor/npm-asset',
     ],
     'components' => [
+        'authManager' => [
+            'class' => 'yii\rbac\DbManager',
+        ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'bpK9DW1eAhOQKOel8z8PBLqG3l9bZCwk',
@@ -53,6 +58,22 @@ $config = [
             'rules' => [
             ],
         ],
+        'i18n' => [
+            'translations' => [
+                //'*' => [
+                'app' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    //'basePath' => '@app/messages',
+                    'sourceLanguage' => 'pt-BR',
+                    //forceTranslation é necessário quando for a mesma lingua em language e sourcelanguage
+                    'forceTranslation' => true,
+                    'fileMap' => [
+                        'app' => 'app.php',
+                        //'app/error' => 'error.php',
+                    ],
+                ],
+            ],
+        ],
     ],
     'params' => $params,
 ];
@@ -75,13 +96,13 @@ if (YII_ENV_DEV) {
             'crud' => [ // generator name
                 'class' => 'yii\gii\generators\crud\Generator', // generator class
                 'templates' => [ //setting for out templates
-                    'v1' => '@app/templates/crud/v1', // template name => path to template
+                    'v1' => '@app/gii/templates/crud/v1', // template name => path to template
                 ]
             ],
             'model' => [ // generator name
                 'class' => 'yii\gii\generators\model\Generator', // generator class
                 'templates' => [ //setting for out templates
-                    'v1' => '@app/templates/model/v1', // template name => path to template
+                    'v1' => '@app/gii/templates/model/v1', // template name => path to template
                 ]
             ]
         ],

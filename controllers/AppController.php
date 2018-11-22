@@ -7,6 +7,8 @@ use app\models\App;
 use app\models\AppSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
+use yii\widgets\ActiveForm;
 use yii\filters\VerbFilter;
 
 /**
@@ -66,9 +68,16 @@ class AppController extends Controller
     {
         $model = new App();
 
+        if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ActiveForm::validate($model);
+        }
+        
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['index']);
         }
+
+        $model->is_active = true;
 
         return $this->render('create', [
             'model' => $model,
@@ -85,6 +94,11 @@ class AppController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        
+        if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ActiveForm::validate($model);
+        }
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['index']);
